@@ -33,10 +33,11 @@ attributes = ["fixed acidity","volatile acidity","citric acid","residual sugar",
 
 for i in range(len(attributes)):
     arr = []
-    mean = np.mean(np.asarray(X.iloc[:,i]), axis=0)
-    sd = np.std(np.asarray(X.iloc[:,i]), axis=0)
+    X = StandardScaler().fit_transform(X)
+    mean = np.mean(np.asarray(X[:,i]), axis=0)
+    sd = np.std(np.asarray(X[:,i]), axis=0)
     for z in range(len(Y)):
-        newArr = [X.iloc[z,i] , Y[z] ]
+        newArr = [X[z,i] , Y[z] ]
         arr.append(newArr)
     c = collections.Counter(map(tuple, arr))
     fig = plt.figure()
