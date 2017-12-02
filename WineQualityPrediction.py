@@ -31,7 +31,7 @@ models = []
 attributes = ["fixed acidity","volatile acidity","citric acid","residual sugar","chlorides",
     "free sulfur dioxide","total sulfur dioxide","density","pH","sulphates","alcohol"]
 
-'''for i in range(len(attributes)):
+for i in range(len(attributes)):
     arr = []
     mean = np.mean(np.asarray(X.iloc[:,i]), axis=0)
     sd = np.std(np.asarray(X.iloc[:,i]), axis=0)
@@ -43,21 +43,25 @@ attributes = ["fixed acidity","volatile acidity","citric acid","residual sugar",
     ax = fig.add_subplot(111, projection='3d')
 
     for k, v in c.items():
-        if (k[0] > mean - 2 * sd):
+        if (k[0] > mean -  sd) and v >1:
             ax.scatter(k[0], k[1], v, c='r', marker='o')
 
     ax.set_xlabel(attributes[i])
     ax.set_ylabel('Quality')
     ax.set_zlabel('Frequency')
+    plt.show()
 
-    #plt.scatter(np.asarray(X.iloc[:,i]), Y.T)
-    #plt.show()
-'''
 
 
 models.append(('LogisticRegression', LogisticRegression(), 0))
-models.append(('KNN', KNeighborsClassifier(),0))
-
+'''models.append(('KNN', KNeighborsClassifier(),0))
+models.append(('SVC Linear Kernal', SVC(kernel="linear", C=0.025),0))
+models.append(('SVC gamma', SVC(gamma=2, C=1),0))
+models.append(('GaussianProcessClassifier', GaussianProcessClassifier(1.0 * RBF(1.0)),0))
+models.append(('DecisionTreeClassifier', DecisionTreeClassifier(max_depth=5),0))
+models.append(('RandomForestClassifier', RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1),0))
+models.append(('AdaBoostClassifier', AdaBoostClassifier(),0))
+'''
 # evaluate each model in turn
 scoring = ['accuracy']
 
@@ -71,8 +75,10 @@ for outer in range(len(attributes)):
             #print(inner)
             current_testing = X[inner[0:index]]
             for name, model, score in models:
+                print(model)
                 kfold = model_selection.KFold(n_splits=10)
                 cv_results = model_selection.cross_val_score(model, current_testing[:size], Y[:size], cv=kfold, scoring='accuracy')
+                print(cv_results.mean())
                 if cv_results.mean()>best_result:
                     best_result = cv_results.mean()
                     best_combo = inner
