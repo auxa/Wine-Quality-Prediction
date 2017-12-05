@@ -22,20 +22,24 @@ from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 from mpl_toolkits.mplot3d import axes3d
+from sklearn.linear_model import SGDClassifier
 # load dataset
 dataset = pd.read_csv("winequality-white.csv", delimiter=";")
-size = 100#, 500, 1000]
-X = dataset
+size = 500#, 500, 1000]
+X=dataset
 Y = dataset['quality']
 X= X.astype('int')
 Y=Y.astype('int')
+X= X.drop('quality',axis=1)
+X= X.drop('chlorides',axis=1)
+
 models = []
-attributes = ["fixed acidity","volatile acidity","citric acid","residual sugar","chlorides",
+attributes = ["fixed acidity","volatile acidity","citric acid","residual sugar",
     "free sulfur dioxide","total sulfur dioxide","density","pH","sulphates","alcohol"]
+
 fig = plt.figure()
 for i in range(len(attributes)):
     arr = []
-    #X = StandardScaler().fit_transform(X)
     mean = np.mean(np.asarray(X.iloc[:,i]), axis=0)
     sd = np.std(np.asarray(X.iloc[:,i]), axis=0)
     for z in range(len(Y)):
@@ -56,15 +60,16 @@ for i in range(len(attributes)):
 
 #plt.show()
 
+X = StandardScaler().fit_transform(X)
+X = pd.DataFrame(X,columns=attributes)
 
-
-models.append(('LogisticRegression', LogisticRegression(), 0))
-models.append(('SVC gamma', SVC(gamma=2, C=1),0))
+#models.append(('LogisticRegression', LogisticRegression(), 0))
 models.append(('RandomForestClassifier', RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1),0))
+models.append(('SVC gamma', SVC(gamma=2, C=1),0))
 
 # evaluate each model in turn
 scoring = ['accuracy']
-
+best_algo=""
 best_combo=[]
 best_result =-1
 index=0
@@ -72,7 +77,7 @@ ofile  = open('results.csv', "w")
 writer = csv.writer(ofile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 for outer in range(len(attributes)):
     for inner in combinations(attributes, outer):
-        if len(inner)>0:
+        if len(inner)>3 and len(inner)< 9:
             inner =list(inner)
             current_testing = X[inner[0:index]]
             for name, model, score in models:
@@ -82,7 +87,9 @@ for outer in range(len(attributes)):
                 if cv_results.mean()>best_result:
                     best_result = cv_results.mean()
                     best_combo = inner
+                    best_algo=name
     index+=1
 
 print(best_result)
 print(best_combo)
+print(best_algo)
