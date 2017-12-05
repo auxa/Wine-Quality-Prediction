@@ -25,16 +25,15 @@ from mpl_toolkits.mplot3d import axes3d
 from sklearn.linear_model import SGDClassifier
 # load dataset
 dataset = pd.read_csv("winequality-white.csv", delimiter=";")
-size = 1500#, 500, 1000]
+size = 150#, 500, 1000]
 X=dataset
 Y = dataset['quality']
 X= X.astype('int')
 Y=Y.astype('int')
-X= X.drop('quality',axis=1)
+X= X.drop(['quality', "fixed acidity","volatile acidity","citric acid","residual sugar",'chlorides',"total sulfur dioxide" ],axis=1)
 
 models = []
-attributes = ["fixed acidity","volatile acidity","citric acid","residual sugar",'chlorides',
-    "free sulfur dioxide","total sulfur dioxide","density","pH","sulphates","alcohol"]
+attributes = ["free sulfur dioxide","density","pH","sulphates","alcohol"]
 
 fig = plt.figure()
 for i in range(len(attributes)):
@@ -76,7 +75,7 @@ ofile  = open('results.csv', "w")
 writer = csv.writer(ofile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 for outer in range(len(attributes)):
     for inner in combinations(attributes, outer):
-        if len(inner)>0 and index < 2:
+        if len(inner)>0 :
             inner =list(inner)
             current_testing = X[inner[0:index]]
             for name, model, score in models:

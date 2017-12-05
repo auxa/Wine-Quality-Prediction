@@ -1,44 +1,60 @@
-a,b,c
-RandomForestClassifier,0.434666667,['fixed acidity']
-,,
-SVC gamma,0.436,['fixed acidity']
-,,
-RandomForestClassifier,0.436,['volatile acidity']
-,,
-SVC gamma,0.436,['volatile acidity']
-,,
-RandomForestClassifier,0.436,['citric acid']
-,,
-SVC gamma,0.436,['citric acid']
-,,
-RandomForestClassifier,0.422666667,['residual sugar']
-,,
-SVC gamma,0.434,['residual sugar']
-,,
-RandomForestClassifier,0.436,['chlorides']
-,,
-SVC gamma,0.436,['chlorides']
-,,
-RandomForestClassifier,0.446666667,['free sulfur dioxide']
-,,
-SVC gamma,0.442,['free sulfur dioxide']
-,,
-RandomForestClassifier,0.395333333,['total sulfur dioxide']
-,,
-SVC gamma,0.426,['total sulfur dioxide']
-,,
-RandomForestClassifier,0.438,['density']
-,,
-SVC gamma,0.435333333,['density']
-,,
-RandomForestClassifier,0.436,['pH']
-,,
-SVC gamma,0.436,['pH']
-,,
-RandomForestClassifier,0.436,['sulphates']
-,,
-SVC gamma,0.436,['sulphates']
-,,
-RandomForestClassifier,0.463333333,['alcohol']
-,,
-SVC gamma,0.463333333,['alcohol']
+RandomForestClassifier,0.5,['free sulfur dioxide']
+SVC gamma,0.386666666667,['free sulfur dioxide']
+RandomForestClassifier,0.4,['density']
+SVC gamma,0.4,['density']
+RandomForestClassifier,0.366666666667,['pH']
+SVC gamma,0.4,['pH']
+RandomForestClassifier,0.4,['sulphates']
+SVC gamma,0.4,['sulphates']
+RandomForestClassifier,0.38,['alcohol']
+SVC gamma,0.36,['alcohol']
+RandomForestClassifier,0.413333333333,"['free sulfur dioxide', 'density']"
+SVC gamma,0.346666666667,"['free sulfur dioxide', 'density']"
+RandomForestClassifier,0.393333333333,"['free sulfur dioxide', 'pH']"
+SVC gamma,0.426666666667,"['free sulfur dioxide', 'pH']"
+RandomForestClassifier,0.413333333333,"['free sulfur dioxide', 'sulphates']"
+SVC gamma,0.386666666667,"['free sulfur dioxide', 'sulphates']"
+RandomForestClassifier,0.4,"['free sulfur dioxide', 'alcohol']"
+SVC gamma,0.42,"['free sulfur dioxide', 'alcohol']"
+RandomForestClassifier,0.4,"['density', 'pH']"
+SVC gamma,0.4,"['density', 'pH']"
+RandomForestClassifier,0.4,"['density', 'sulphates']"
+SVC gamma,0.4,"['density', 'sulphates']"
+RandomForestClassifier,0.353333333333,"['density', 'alcohol']"
+SVC gamma,0.36,"['density', 'alcohol']"
+RandomForestClassifier,0.4,"['pH', 'sulphates']"
+SVC gamma,0.4,"['pH', 'sulphates']"
+RandomForestClassifier,0.373333333333,"['pH', 'alcohol']"
+SVC gamma,0.366666666667,"['pH', 'alcohol']"
+RandomForestClassifier,0.333333333333,"['sulphates', 'alcohol']"
+SVC gamma,0.36,"['sulphates', 'alcohol']"
+RandomForestClassifier,0.373333333333,"['free sulfur dioxide', 'density', 'pH']"
+SVC gamma,0.42,"['free sulfur dioxide', 'density', 'pH']"
+RandomForestClassifier,0.44,"['free sulfur dioxide', 'density', 'sulphates']"
+SVC gamma,0.346666666667,"['free sulfur dioxide', 'density', 'sulphates']"
+RandomForestClassifier,0.373333333333,"['free sulfur dioxide', 'density', 'alcohol']"
+SVC gamma,0.406666666667,"['free sulfur dioxide', 'density', 'alcohol']"
+RandomForestClassifier,0.36,"['free sulfur dioxide', 'pH', 'sulphates']"
+SVC gamma,0.426666666667,"['free sulfur dioxide', 'pH', 'sulphates']"
+RandomForestClassifier,0.4,"['free sulfur dioxide', 'pH', 'alcohol']"
+SVC gamma,0.413333333333,"['free sulfur dioxide', 'pH', 'alcohol']"
+RandomForestClassifier,0.42,"['free sulfur dioxide', 'sulphates', 'alcohol']"
+SVC gamma,0.42,"['free sulfur dioxide', 'sulphates', 'alcohol']"
+RandomForestClassifier,0.4,"['density', 'pH', 'sulphates']"
+SVC gamma,0.4,"['density', 'pH', 'sulphates']"
+RandomForestClassifier,0.386666666667,"['density', 'pH', 'alcohol']"
+SVC gamma,0.366666666667,"['density', 'pH', 'alcohol']"
+RandomForestClassifier,0.366666666667,"['density', 'sulphates', 'alcohol']"
+SVC gamma,0.36,"['density', 'sulphates', 'alcohol']"
+RandomForestClassifier,0.4,"['pH', 'sulphates', 'alcohol']"
+SVC gamma,0.366666666667,"['pH', 'sulphates', 'alcohol']"
+RandomForestClassifier,0.42,"['free sulfur dioxide', 'density', 'pH', 'sulphates']"
+SVC gamma,0.42,"['free sulfur dioxide', 'density', 'pH', 'sulphates']"
+RandomForestClassifier,0.4,"['free sulfur dioxide', 'density', 'pH', 'alcohol']"
+SVC gamma,0.4,"['free sulfur dioxide', 'density', 'pH', 'alcohol']"
+RandomForestClassifier,0.426666666667,"['free sulfur dioxide', 'density', 'sulphates', 'alcohol']"
+SVC gamma,0.406666666667,"['free sulfur dioxide', 'density', 'sulphates', 'alcohol']"
+RandomForestClassifier,0.42,"['free sulfur dioxide', 'pH', 'sulphates', 'alcohol']"
+SVC gamma,0.413333333333,"['free sulfur dioxide', 'pH', 'sulphates', 'alcohol']"
+RandomForestClassifier,0.393333333333,"['density', 'pH', 'sulphates', 'alcohol']"
+SVC gamma,0.366666666667,"['density', 'pH', 'sulphates', 'alcohol']"
