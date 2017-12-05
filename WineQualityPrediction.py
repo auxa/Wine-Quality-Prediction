@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import csv
 import matplotlib.pyplot as plt
 import collections
 from mpl_toolkits.mplot3d import Axes3D
@@ -20,6 +21,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
+from mpl_toolkits.mplot3d import axes3d
 # load dataset
 dataset = pd.read_csv("winequality-white.csv", delimiter=";")
 size = 100#, 500, 1000]
@@ -30,18 +32,19 @@ Y=Y.astype('int')
 models = []
 attributes = ["fixed acidity","volatile acidity","citric acid","residual sugar","chlorides",
     "free sulfur dioxide","total sulfur dioxide","density","pH","sulphates","alcohol"]
-
+fig = plt.figure()
 for i in range(len(attributes)):
     arr = []
-    X = StandardScaler().fit_transform(X)
-    mean = np.mean(np.asarray(X[:,i]), axis=0)
-    sd = np.std(np.asarray(X[:,i]), axis=0)
+    #X = StandardScaler().fit_transform(X)
+    mean = np.mean(np.asarray(X.iloc[:,i]), axis=0)
+    sd = np.std(np.asarray(X.iloc[:,i]), axis=0)
     for z in range(len(Y)):
-        newArr = [X[z,i] , Y[z] ]
+        newArr = [X.iloc[z,i] , Y[z] ]
         arr.append(newArr)
     c = collections.Counter(map(tuple, arr))
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
+
+
+    ax = fig.add_subplot(3,4,1+i, projection='3d')
 
     for k, v in c.items():
         if (k[0] > mean -  sd) and v >1:
@@ -50,41 +53,36 @@ for i in range(len(attributes)):
     ax.set_xlabel(attributes[i])
     ax.set_ylabel('Quality')
     ax.set_zlabel('Frequency')
-    plt.show()
+
+#plt.show()
 
 
 
 models.append(('LogisticRegression', LogisticRegression(), 0))
-'''models.append(('KNN', KNeighborsClassifier(),0))
-models.append(('SVC Linear Kernal', SVC(kernel="linear", C=0.025),0))
 models.append(('SVC gamma', SVC(gamma=2, C=1),0))
-models.append(('GaussianProcessClassifier', GaussianProcessClassifier(1.0 * RBF(1.0)),0))
-models.append(('DecisionTreeClassifier', DecisionTreeClassifier(max_depth=5),0))
 models.append(('RandomForestClassifier', RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1),0))
-models.append(('AdaBoostClassifier', AdaBoostClassifier(),0))
-'''
+
 # evaluate each model in turn
 scoring = ['accuracy']
 
 best_combo=[]
 best_result =-1
 index=0
+ofile  = open('results.csv', "w")
+writer = csv.writer(ofile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 for outer in range(len(attributes)):
     for inner in combinations(attributes, outer):
         if len(inner)>0:
             inner =list(inner)
-            #print(inner)
             current_testing = X[inner[0:index]]
             for name, model, score in models:
-                print(model)
                 kfold = model_selection.KFold(n_splits=10)
                 cv_results = model_selection.cross_val_score(model, current_testing[:size], Y[:size], cv=kfold, scoring='accuracy')
-                print(cv_results.mean())
+                writer.writerow([str(name) ,cv_results.mean(), str(inner) ])
                 if cv_results.mean()>best_result:
                     best_result = cv_results.mean()
                     best_combo = inner
     index+=1
-
 
 print(best_result)
 print(best_combo)
