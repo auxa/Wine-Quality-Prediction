@@ -25,7 +25,7 @@ from mpl_toolkits.mplot3d import axes3d
 from sklearn.linear_model import SGDClassifier
 # load dataset
 dataset = pd.read_csv("winequality-white.csv", delimiter=";")
-size = 150#, 500, 1000]
+size = 2500#, 500, 1000]
 X=dataset
 Y = dataset['quality']
 X= X.astype('int')
@@ -58,12 +58,15 @@ for i in range(len(attributes)):
 
 #plt.show()
 
-X = StandardScaler().fit_transform(X)
-X = pd.DataFrame(X,columns=attributes)
+#X = StandardScaler().fit_transform(X)
+#X = pd.DataFrame(X,columns=attributes)
 
-#models.append(('LogisticRegression', LogisticRegression(), 0))
-models.append(('RandomForestClassifier', RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1),0))
+models.append(('LogisticRegression', LogisticRegression(), 0))
+models.append(('KNN', KNeighborsClassifier(),0))
+models.append(('SVC Linear Kernal', SVC(kernel="linear", C=0.025),0))
 models.append(('SVC gamma', SVC(gamma=2, C=1),0))
+models.append(('DecisionTreeClassifier', DecisionTreeClassifier(max_depth=5),0))
+models.append(('RandomForestClassifier', RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1),0))
 
 # evaluate each model in turn
 scoring = ['accuracy']
