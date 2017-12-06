@@ -23,10 +23,11 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 from mpl_toolkits.mplot3d import axes3d
 from sklearn.linear_model import SGDClassifier
+from sklearn.linear_model import LinearRegression
 # load dataset
 dataset = pd.read_csv("winequality-white.csv", delimiter=";")
 size = 900#, 500, 1000]
-dataset.loc[dataset['quality'] <5, 'quality'] = 0
+dataset.loc[dataset['quality'] <4, 'quality'] = 0
 dataset.loc[(dataset['quality'] ==4)| (dataset['quality'] == 5)| (dataset['quality'] ==6), 'quality'] = 1
 dataset.loc[dataset['quality'] >6, 'quality'] = 2
 
@@ -64,13 +65,12 @@ for i in range(len(attributes)):
 X = StandardScaler().fit_transform(X)
 X = pd.DataFrame(X,columns=attributes)
 
-#models.append(('LogisticRegression', LogisticRegression(), 0))
-#models.append(('SVC', SVC(kernel = 'rbf',class_weight='balanced', probability=True,random_state = 0),0))
+
 #models.append(('RandomForestClassifier', RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1),0))
-models.append(('Linear Regression', LinearRegression(), 1))
+models.append(('Linear Regression', SVC(), 1))
 
 # evaluate each model in turn
-scoring = ['accuracy', 'rmse']
+scoring = ['accuracy', 'neg_mean_absolute_error']
 best_algo=""
 best_combo=[]
 best_result =-1
@@ -84,8 +84,8 @@ for outer in range(len(attributes)):
             current_testing = X[inner[0:index]]
             for name, model, score in models:
                 kfold = model_selection.KFold(n_splits=10)
-                cv_results = model_selection.cross_val_score(model, current_testing[:size], Y[:size], cv=kfold, scoring='accuracy')
-                writer.writerow([str(name) ,cv_results.mean(), str(inner) ])
+                cv_results = model_selection.cross_val_score(model, current_testing[:size], Y[:size], cv=kfold, scoring='neg_mean_absolute_error')
+                writer.writerow([str(name) ,cv_results.mean()**2, str(inner) ])
                 if cv_results.mean()>best_result:
                     best_result = cv_results.mean()
                     best_combo = inner
