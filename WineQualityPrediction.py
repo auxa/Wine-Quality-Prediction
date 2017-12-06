@@ -10,7 +10,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression
 from itertools import combinations
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, PolynomialFeatures
 from sklearn.datasets import make_moons, make_circles, make_classification
 from sklearn.neural_network import MLPClassifier
 from sklearn.neighbors import KNeighborsClassifier
@@ -25,15 +25,19 @@ from mpl_toolkits.mplot3d import axes3d
 from sklearn.linear_model import SGDClassifier
 # load dataset
 dataset = pd.read_csv("winequality-white.csv", delimiter=";")
-size = 2500#, 500, 1000]
+size = 900#, 500, 1000]
+dataset.loc[dataset['quality'] <5, 'quality'] = 0
+dataset.loc[(dataset['quality'] ==4)| (dataset['quality'] == 5)| (dataset['quality'] ==6), 'quality'] = 1
+dataset.loc[dataset['quality'] >6, 'quality'] = 2
+
 X=dataset
 Y = dataset['quality']
 X= X.astype('int')
 Y=Y.astype('int')
-X= X.drop(['quality', "fixed acidity","volatile acidity","citric acid","residual sugar",'chlorides',"total sulfur dioxide" ],axis=1)
+X= X.drop(['quality',"density"],axis=1)
 
 models = []
-attributes = ["free sulfur dioxide","density","pH","sulphates","alcohol"]
+attributes = ["free sulfur dioxide","pH","sulphates","alcohol","residual sugar","citric acid",'chlorides',"total sulfur dioxide", "fixed acidity","volatile acidity" ]
 
 fig = plt.figure()
 for i in range(len(attributes)):
@@ -49,27 +53,24 @@ for i in range(len(attributes)):
     ax = fig.add_subplot(3,4,1+i, projection='3d')
 
     for k, v in c.items():
-        if (k[0] > mean -  sd) and v >1:
-            ax.scatter(k[0], k[1], v, c='r', marker='o')
+        #if (k[0] > mean -  sd) and v >1:
+        ax.scatter(k[0], k[1], v, c='r', marker='o')
 
     ax.set_xlabel(attributes[i])
     ax.set_ylabel('Quality')
     ax.set_zlabel('Frequency')
 
 #plt.show()
+X = StandardScaler().fit_transform(X)
+X = pd.DataFrame(X,columns=attributes)
 
-#X = StandardScaler().fit_transform(X)
-#X = pd.DataFrame(X,columns=attributes)
-
-models.append(('LogisticRegression', LogisticRegression(), 0))
-models.append(('KNN', KNeighborsClassifier(),0))
-models.append(('SVC Linear Kernal', SVC(kernel="linear", C=0.025),0))
-models.append(('SVC gamma', SVC(gamma=2, C=1),0))
-models.append(('DecisionTreeClassifier', DecisionTreeClassifier(max_depth=5),0))
-models.append(('RandomForestClassifier', RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1),0))
+#models.append(('LogisticRegression', LogisticRegression(), 0))
+#models.append(('SVC', SVC(kernel = 'rbf',class_weight='balanced', probability=True,random_state = 0),0))
+#models.append(('RandomForestClassifier', RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1),0))
+models.append(('Linear Regression', LinearRegression(), 1))
 
 # evaluate each model in turn
-scoring = ['accuracy']
+scoring = ['accuracy', 'rmse']
 best_algo=""
 best_combo=[]
 best_result =-1
