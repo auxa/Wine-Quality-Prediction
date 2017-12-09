@@ -55,44 +55,4 @@ for i in range(len(attributes)):
     ax.set_ylabel('Quality')
     ax.set_zlabel('Frequency')
 
-#plt.show()
-
-
-models.append(('RandomForestClassifier', RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1),0))
-
-#models.append(('Ridge Regression', Ridge(),1))
-
-X = StandardScaler().fit_transform(X)
-X = pd.DataFrame(X,columns=attributes)
-# evaluate each model in turn
-scoring = ['accuracy', 'neg_mean_squared_error']
-best_algo=["", ""]
-best_combo=[[],[]]
-best_result =[-1, -1]
-
-index=0
-ofile  = open('results.csv', "w")
-writer = csv.writer(ofile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-for outer in range(len(attributes)):
-    for inner in combinations(attributes, outer):
-        if len(inner)>0 :
-            inner =list(inner)
-            current_testing = X[inner[0:index]]
-            for name, model, score in models:
-                kfold = model_selection.KFold(n_splits=10)
-                cv_results = model_selection.cross_val_score(model, current_testing[:size], Y[:size], cv=kfold, scoring=scoring[score])
-                writer.writerow([str(name) ,cv_results.mean(), str(inner) ])
-                if cv_results.mean()>best_result[score] and score ==0:
-                    best_result[score] = cv_results.mean()
-                    best_combo[score] = inner
-                    best_algo[score]=name
-                if score == 1 and cv_results.mean() > best_result[score]:
-                    best_result[score] = cv_results.mean()
-                    best_combo[score] = inner
-                    best_algo[score]=name
-
-    index+=1
-
-print(best_result)
-print(best_combo)
-print(best_algo)
+plt.show()

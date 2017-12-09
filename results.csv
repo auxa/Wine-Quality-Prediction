@@ -1,0 +1,4 @@
+RandomForestClassifier,0.789166666667,"['residual sugar', 'free sulfur dioxide', 'total sulfur dioxide', 'alcohol']"
+RandomForestClassifier,0.798125,"['residual sugar', 'free sulfur dioxide', 'total sulfur dioxide', 'alcohol']"
+RandomForestClassifier,0.79125,"['residual sugar', 'free sulfur dioxide', 'total sulfur dioxide', 'alcohol']"
+RandomForestClassifier,0.793541666667,"['residual sugar', 'free sulfur dioxide', 'total sulfur dioxide', 'alcohol']"
