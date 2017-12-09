@@ -10,7 +10,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression
 from itertools import combinations
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler, PolynomialFeatures, MinMaxScaler
+from sklearn.preprocessing import StandardScaler, PolynomialFeatures, Normalizer
 from sklearn.datasets import make_moons, make_circles, make_classification
 from sklearn.neural_network import MLPClassifier
 from sklearn.neighbors import KNeighborsClassifier
@@ -26,21 +26,18 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.linear_model import LinearRegression
 
 dataset = pd.read_csv("winequality-white.csv", delimiter=";")
-size = 2550#, 500, 1000]
-dataset.loc[dataset['quality'] <4, 'quality'] = -1
-dataset.loc[(dataset['quality'] ==4)| (dataset['quality'] == 5)| (dataset['quality'] ==6), 'quality'] = 0
-dataset.loc[dataset['quality'] >6, 'quality'] = 1
-
-X=dataset
+size = 1050#, 500, 1000]
 Y = dataset['quality']
+
+dataset.loc[dataset['quality'] <4, 'quality'] = 0
+dataset.loc[(dataset['quality'] ==4)| (dataset['quality'] == 5)| (dataset['quality'] ==6), 'quality'] = 5
+dataset.loc[dataset['quality'] >6, 'quality'] = 10
+X=dataset
 X= X.astype('int')
 Y=Y.astype('int')
-X= X.drop(["chlorides", "quality","volatile acidity","pH","sulphates","fixed acidity","citric acid","density"],axis=1)
+X= X.drop(["chlorides", "volatile acidity","pH","sulphates","fixed acidity","citric acid","density","quality"],axis=1)
 attributes = ["residual sugar","free sulfur dioxide","total sulfur dioxide","alcohol"]
-
-#X = StandardScaler().fit_transform(X)
-#X = pd.DataFrame(X,columns=attributes)
-
+#X = X**2
 models = []
 models.append(('RandomForestClassifier', RandomForestClassifier(max_depth=10, n_estimators=20, max_features=1),0))
 models.append(('SVC', SVC(kernel = 'rbf',class_weight='balanced', probability=True,random_state = 0), 1))
