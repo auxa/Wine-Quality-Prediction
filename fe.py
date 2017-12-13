@@ -1,8 +1,10 @@
 import pandas as pd
 import numpy as np
-import csv
+import time
 import matplotlib.pyplot as plt
 import collections
+from sklearn.feature_selection import SelectKBest
+from sklearn.feature_selection import chi2
 from mpl_toolkits.mplot3d import Axes3D
 from sklearn import model_selection
 from sklearn.tree import DecisionTreeClassifier
@@ -10,7 +12,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression
 from itertools import combinations
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler, PolynomialFeatures, Normalizer
+from sklearn.preprocessing import StandardScaler, PolynomialFeatures, MinMaxScaler
 from sklearn.datasets import make_moons, make_circles, make_classification
 from sklearn.neural_network import MLPClassifier
 from sklearn.neighbors import KNeighborsClassifier
@@ -24,9 +26,12 @@ from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 from mpl_toolkits.mplot3d import axes3d
 from sklearn.linear_model import SGDClassifier
 from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import cross_val_predict
+from sklearn.metrics import confusion_matrix
+
 
 dataset = pd.read_csv("winequality-white.csv", delimiter=";")
-size = 1050#, 500, 1000]
+size = 800#, 500, 1000]
 Y = dataset['quality']
 
 dataset.loc[dataset['quality'] <4, 'quality'] = 0
@@ -38,11 +43,13 @@ Y=Y.astype('int')
 X= X.drop(["chlorides", "volatile acidity","pH","sulphates","fixed acidity","citric acid","density","quality"],axis=1)
 attributes = ["residual sugar","free sulfur dioxide","total sulfur dioxide","alcohol"]
 #X = X**2
+
+
 models = []
-models.append(('RandomForestClassifier', RandomForestClassifier(max_depth=10, n_estimators=20, max_features=1),0))
-models.append(('SVC', SVC(kernel = 'rbf',class_weight='balanced', probability=True,random_state = 0), 1))
+models.append(('RandomForestClassifier', RandomForestClassifier(max_depth=4, n_estimators=20, max_features=2),0))
+models.append(('SVC', SVC(kernel = 'rbf',class_weight='balanced', probability=True), 1))
 # evaluate each model in turn
-scoring = ['accuracy', 'accuracy']
+scoring = ['precision_weighted', 'precision_weighted']
 best_algo=["", ""]
 best_result =[-1, -1]
 std = [0,0]
@@ -60,7 +67,7 @@ corrolation = X.corr()
 sns.heatmap(corrolation)
 #plt.show()
 Var = np.var(X)
-print(corrolation)
+#print(corrolation)
 
 
 # feature extraction
@@ -68,23 +75,31 @@ from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import chi2
 test = SelectKBest(score_func=chi2, k=4)
 fit = test.fit(X, Y)
-print(fit.scores_)
+#print(fit.scores_)
+
+
+
 
 index=0
 for name, model, score in models:
+
     kfold = model_selection.KFold(n_splits=10)
+    t1 = time.time()
     cv_results = model_selection.cross_val_score(model, X[:size], Y[:size], cv=kfold, scoring=scoring[score])
+    t2 = time.time()
+    print(model)
+    print(t2-t1)
     if cv_results.mean()>best_result[score] and score ==0:
         best_result[score] = cv_results.mean()
         best_algo[score]=name
         std[score] =  cv_results.std()*2
-        print(cv_results)
+        #print(cv_results)
 
     if score == 1 and cv_results.mean() > best_result[score]:
         best_result[score] = cv_results.mean()
         best_algo[score]=name
         std[score] =  cv_results.std()*2
-        print(cv_results)
+        #print(cv_results)
 
 
 print(best_result)

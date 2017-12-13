@@ -17,7 +17,7 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.linear_model import LinearRegression, Ridge
 # load dataset
 dataset = pd.read_csv("winequality-white.csv", delimiter=";")
-size = 500#, 500, 1000]
+size = 4898#, 500, 1000]
 dataset.loc[dataset['quality'] <4, 'quality'] = 0
 dataset.loc[(dataset['quality'] ==4)| (dataset['quality'] == 5)| (dataset['quality'] ==6), 'quality'] = 1
 dataset.loc[dataset['quality'] >6, 'quality'] = 2
